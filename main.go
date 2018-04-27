@@ -1,17 +1,12 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
 )
 
-var host *string = flag.String("host", "localhost", "server host, ip")
-var port *int = flag.Int("port", 8000, "the default port")
-
 func main() {
-	flag.Parse()
 
 	var server = fmt.Sprintf("%s:%d", *host, *port)
 	fmt.Println("will Serve on:", server)

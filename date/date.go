@@ -30,8 +30,7 @@ func Today() Date {
 
 // 月份的英文缩写常量
 const (
-	_ int8 = iota
-	Jan
+	Jan = 1 + iota
 	Feb
 	Mar
 	Apr

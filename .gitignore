@@ -3,4 +3,5 @@
 *.out
 core.*
 Session.vim
+vnotego
 bin/
