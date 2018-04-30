@@ -7,13 +7,9 @@ func ExampleDate() {
 	var d = NewDate(2018, 4, 15)
 	fmt.Println(d)
 
-	SepField(SEP_PATH)
-	fmt.Println(d)
-
 	fmt.Println(d.IntNum())
 	fmt.Println(d.IntNum() + 1)
-	// Output: 2018-04-15
-	// 2018/04/15
+	// Output: 2018/04/15
 	// 20180415
 	// 20180416
 }
@@ -37,9 +33,23 @@ func TestDate(t *testing.T) {
 				year, daysExpect, daysGot)
 		}
 	}
+
+	if NewDate(2018, 2, 28).IntNum() != 20180228 {
+		t.Errorf("NewDate(2018,2,28) fails\n")
+	}
+	if NewDate(2018, 2, 29).IntNum() != 0 {
+		t.Errorf("NewDate(2018,2,29) fails\n")
+	}
+	if NewDate(2018, 2, 29).Valid() {
+		t.Errorf("NewDate(2018,2,29) fails\n")
+	}
+	if NewDate(2000, 2, 29).IntNum() != 20000229 {
+		t.Errorf("NewDate(2018,2,29) fails\n")
+	}
 }
 
 func TestMain(m *testing.M) {
-	TestDate(nil)
+	m.Run()
+	// TestDate(nil)
 	ExampleDate()
 }

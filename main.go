@@ -3,31 +3,21 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
+
+	"github.com/lymslive/vnotego/notebook"
+	"github.com/lymslive/vnotego/page"
+	"github.com/lymslive/vnotego/readcfg"
 )
 
 func main() {
 
-	var server = fmt.Sprintf("%s:%d", *host, *port)
-	fmt.Println("will Serve on:", server)
+	cfg := readcfg.ParseConfig()
+	notebook.BookDir(cfg.BookDir)
 
-	setHandler()
-	log.Fatal(http.ListenAndServe(server, nil))
+	var address = fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
+	log.Println("will Serve on:", address)
 
-	fmt.Printf("Serve on %s success! But cannot reach here\n", server)
-}
+	page.StartServe()
 
-func setHandler() {
-	http.HandleFunc("/url", handler)
-	http.HandleFunc("/", welcome)
-}
-
-func welcome(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, wrold!")
-	fmt.Fprintln(w, "Hello, golang!")
-	fmt.Fprintln(w, "Hello, vim note!")
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "RUL.Path = %q\n", r.URL.Path)
+	log.Printf("Serve on %s success! But cannot reach here\n", address)
 }

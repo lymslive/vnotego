@@ -2,6 +2,7 @@ package date
 
 import "fmt"
 import "time"
+import "path/filepath"
 
 // 日期类型，年月日三部分小整数，共四字节
 type Date struct {
@@ -11,15 +12,13 @@ type Date struct {
 }
 
 // 构造函数，从三个常规 int 构造一个日期结构
+// 如果日期不合法，返回零值
 func NewDate(year, month, day int) Date {
-	var d Date
-	if year <= 0 || year > 9999 || month <= 0 || month > 12 || day <= 0 || day > 31 {
-		return d
+	if !Valid(year, month, day) {
+		return Date{}
 	}
-	d.Year = int16(year)
-	d.Month = int8(month)
-	d.Day = int8(day)
-	return d
+
+	return Date{int16(year), int8(month), int8(day)}
 }
 
 // 获取今天的日期值
@@ -49,7 +48,7 @@ var MonthDays [13]int8
 
 func init() {
 	MonthDays[1] = 31
-	MonthDays[2] = 28
+	MonthDays[2] = 29
 	MonthDays[3] = 31
 	MonthDays[4] = 30
 	MonthDays[5] = 31
@@ -77,8 +76,8 @@ func EndDay(year, month int) (days int, leap bool) {
 	}
 	days = int(MonthDays[month])
 	leap = year > 0 && IsLeap(year)
-	if leap {
-		days++
+	if month == Feb && !leap {
+		days--
 	}
 	return
 }
@@ -91,6 +90,10 @@ const SEP_PATH string = SEP_SLASH
 
 // 年月日字符串化的默认分隔符
 var sepField string = SEP_IOS
+
+func init() {
+	sepField = string(filepath.Separator)
+}
 
 // 设置默认的分隔符，返回旧分割符
 func SepField(sep string) (old string) {
@@ -107,4 +110,28 @@ func (d Date) String() string {
 // 将日期转为整数数字
 func (d Date) IntNum() int {
 	return int(d.Year)*10000 + int(d.Month)*100 + int(d.Day)
+}
+
+// 判断日期是否合法
+func (d Date) Valid() bool {
+	return Valid(int(d.Year), int(d.Month), int(d.Day))
+}
+
+func Valid(year, month, day int) bool {
+	switch {
+	case year <= 0 || year > 9999:
+		return false
+	case month <= 0 || month > 12:
+		return false
+	case day <= 0 || int8(day) > MonthDays[month]:
+		return false
+	default:
+		if month == Feb {
+			days, _ := EndDay(year, month)
+			if day > days {
+				return false
+			}
+		}
+	}
+	return true
 }
