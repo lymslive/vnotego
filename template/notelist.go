@@ -18,7 +18,8 @@ import (
 */
 
 const (
-	MAX_GLOB_LIST int = 100
+	MAX_GLOB_LIST  int    = 100
+	ERR_HEAD_TITLE string = "！读取笔记标签错误！"
 )
 
 type tempNoteListor struct {
@@ -77,6 +78,9 @@ func GenNoteList(w io.Writer, tagName string) error {
 		var st tempNoteListor
 		st.NoteID, st.Title = field[0], field[1]
 		st.Date = _noteOfdate(st.NoteID)
+		if st.Title == "" {
+			st.Title = ERR_HEAD_TITLE
+		}
 		tempData.SuchList = append(tempData.SuchList, st)
 	}
 
@@ -141,6 +145,9 @@ func GenNoteGlob(w io.Writer, datePath string) error {
 			log.Printf("fails to scan head of note[%s]", file)
 		}
 		st.Title = head.Title
+		if st.Title == "" {
+			st.Title = ERR_HEAD_TITLE
+		}
 
 		tempData.SuchList = append(tempData.SuchList, st)
 	}
