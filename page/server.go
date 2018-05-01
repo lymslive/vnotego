@@ -92,17 +92,35 @@ func handleTest(w http.ResponseWriter, r *http.Request) {
 
 func handleTreeTag(w http.ResponseWriter, r *http.Request) {
 	log.Printf("req from: %q, res by: %s", r.URL.Path, "handleTreeTag")
-	fmt.Fprintf(w, "RUL.Path = %q\n", r.URL.Path)
+	switch {
+	case responListByTag(w, r):
+		log.Printf("success to responListByTag()")
+	default:
+		log.Printf("fails to respond to: %q", r.URL.Path)
+		http.NotFound(w, r)
+	}
 }
 
 func handleTreeDate(w http.ResponseWriter, r *http.Request) {
 	log.Printf("req from: %q, res by: %s", r.URL.Path, "handleTreeDate")
-	fmt.Fprintf(w, "RUL.Path = %q\n", r.URL.Path)
+	switch {
+	case responListByDate(w, r):
+		log.Printf("success to responListByDate()")
+	default:
+		log.Printf("fails to respond to: %q", r.URL.Path)
+		http.NotFound(w, r)
+	}
 }
 
 func handleTreeRaw(w http.ResponseWriter, r *http.Request) {
 	log.Printf("req from: %q, res by: %s", r.URL.Path, "handleTreeRaw")
-	fmt.Fprintf(w, "RUL.Path = %q\n", r.URL.Path)
+	switch {
+	case responNoteRaw(w, r):
+		log.Printf("success to responNoteRaw()")
+	default:
+		log.Printf("fails to respond to: %q", r.URL.Path)
+		http.NotFound(w, r)
+	}
 }
 
 func handleQueryTag(w http.ResponseWriter, r *http.Request) {

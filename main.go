@@ -12,10 +12,15 @@ import (
 func main() {
 
 	cfg := readcfg.ParseConfig()
-	notebook.BookDir(cfg.BookDir)
+	notebook.SetBaseDir(cfg.BookDir)
 
 	var address = fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
-	log.Println("will Serve on:", address)
+	fmt.Println("will Serve on:", address)
+
+	fmt.Printf("default log prefix[%s], flag[%d]\n", log.Prefix(), log.Flags())
+	log.SetPrefix("[VNOTEGO] ")
+	log.SetFlags(log.Ltime | log.Lshortfile)
+	fmt.Printf("now log prefix[%s], flag[%d]\n", log.Prefix(), log.Flags())
 
 	page.StartServe()
 
